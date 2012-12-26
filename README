@@ -1,0 +1,67 @@
+FreeNLP
+
+Motivation
+After using NLTK and other wonderful python tools for a few years, 
+it seems like it's time for dot net to have a library of similar NLP tools.
+
+FreeNLP is an effort to enable the ease of use of nLTK in the dot net world 
+without the effort of shoe-horning nltk libraries into IronPython.
+
+currently the library only supports a couple of corpus readers and only a 
+small amount of functionality in them:
+
+The Corpus Reader support currently includes:
+NLTK Treebank corpus - read raw sentences, tagged sentences, 
+  and parsed sentences.
+
+Treebank-3 corpus - read raw and parsed sentences in each of the available 
+  subcorpora: ATIS Switchboard, wsj, and brown.
+
+My plan is to provide quality corpus investigation tools which, when combined 
+with Machine Learning packages like maxent or Infer.net, can be just as powerful 
+as the tools available in java or python.
+
+Use
+FreeNLP is source code only.  clone the repo and compile the library.
+Unlike nltk, FreeNLP does not come with any corpora.  you omust obtain the 
+texts on your own.
+
+Once you have the corpora you can do a couple of different things with FreeNLP.
+Here's some usage examples below.
+
+Example 1: Printing untagged sentences from Treebank-3
+
+      // find Treebank-3
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
+      
+      // create a corpus reader
+      var treebank = new Treebank3CorpusReader(path);
+
+      // iterate on the contents of the corpus reader looking for text only.
+      // print the first 10 sentences.
+      foreach (var content in treebank.read_sents().Take(10))
+      {
+        Console.WriteLine(content);
+      }
+
+Example 2: split corpus terms by spaces
+
+      var r = new Regex(@"([^\s]+)");
+      foreach (var term in r.Split(FileAndFolders.AllFileContents(path)).Take(100))
+      {
+        Console.WriteLine(term);
+      }
+
+===========================================================================================
+
+License
+Copyright (c) 2012, Joe Dumoulin
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+

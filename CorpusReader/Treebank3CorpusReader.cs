@@ -103,5 +103,8 @@ namespace CorpusReader
       return read_subcorpora(TextTools.get_tagged_strings_from_file, TextTools.get_tag_from_string);
     }
 
+    //TODO: read_NP_Chunks
+
+    // TODO: read_
   }
 }
