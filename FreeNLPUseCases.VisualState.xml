@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\FreeNLPUseCases.nunit</TopNode>
+  <SelectedNode>[0-1000]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\FreeNLPUseCases.nunit</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\FreeNLPUseCases.nunit" Expanded="true" />
+    <Node UniqueName="[0-1026]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\TestFilesAndFolders\bin\Debug\TestFilesAndFolders.dll" Expanded="true" />
+    <Node UniqueName="[0-1027]TestFilesAndFolders" Expanded="true" />
+    <Node UniqueName="[0-1004]TestFilesAndFolders.TestTextTools" Expanded="true" />
+  </Nodes>
+</VisualState>
