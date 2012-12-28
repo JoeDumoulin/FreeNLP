@@ -16,7 +16,7 @@ namespace DebugTest
     {
       var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
       var treebank = new Treebank3CorpusReader(path);
-      foreach (var content in treebank.read_sents())
+      foreach (var content in treebank.read_NP_terms())
       {
         //var x = content;
         Console.WriteLine(content);
@@ -39,11 +39,11 @@ namespace DebugTest
       //}
       // A little test
       //var r = new Regex(@"([^\s]+)");
-    //  foreach (var term in r.Split(FileAndFolders.AllFileContents(path)))
-    //  {
-    ////    if (term.Length > 0 && term.Last() == '.') 
-    //      Console.WriteLine(term);
-    //  }
+      //foreach (var term in r.Split(FileAndFolders.AllFileContents(path)))
+      //{
+      //  //    if (term.Length > 0 && term.Last() == '.') 
+      //  Console.WriteLine(term);
+      //}
     }
   }
 }

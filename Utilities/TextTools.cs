@@ -29,7 +29,7 @@ namespace Utilities
 
     public static bool is_group_boundary(string text)
     {
-      if (text.First() == '=')
+      if (text.Trim().First() == '=')
       {
         return true;
       }
@@ -82,15 +82,6 @@ namespace Utilities
       return false;
     }
 
-    //public bool is_phrase(string text)
-    //{
-    //  if (text != null && text.Trim().First() == '[')
-    //  {
-    //    return false;
-    //  }
-    //  return true;
-    //}
-
     public static string trim_brackets(string text)
     {
       Match m = bracketed_phrase.Match(text);
@@ -102,43 +93,12 @@ namespace Utilities
       return tagged_term.Match(tagged_string).Groups[1].Value;
     }
 
-    public static IEnumerable<string> strip_tags_from_terms(MatchCollection terms)
+    // term filters
+    public static IEnumerable<string> get_any_term_from_string(string line)
     {
-      foreach (Match m in terms)
+      foreach (Match m in not_whitespace.Matches(line))
       {
-        if (m.Success)
-        {
-          string term = get_term_from_tagged_term(m.Groups[0].Value);
-          if (term != null)
-          {
-            yield return term;
-          } 
-        }
-      }
-    }
-
-    public static string get_text_from_line(string line)
-    {
-      MatchCollection ms = not_whitespace.Matches(line);
-      return  strip_tags_from_terms(ms).DefaultIfEmpty("").Aggregate((a1, a2) => a1 + " " + a2);
-    }
-
-    public static IEnumerable<string> get_text_from_file(string fileid)
-    {
-      foreach (var line in FilesAndFolders.FileContentsByLine(fileid))
-      {
-        // Ignore comment lines
-        if (!is_empty(line) && !is_comment(line))
-        {
-          if (is_NP(line))
-          {
-            yield return get_text_from_line(trim_brackets(line));
-          }
-          else
-          {
-            yield return get_text_from_line(line);
-          }
-        }
+        yield return m.Groups[0].Value;
       }
     }
 
@@ -166,15 +126,12 @@ namespace Utilities
       }
     }
 
-
-    public static IEnumerable<string> get_tagged_strings_from_file(string fileid)
+    // line filters
+    public static IEnumerable<string> get_tagged_strings_from_file(
+          Func<IEnumerable<string>> line_generator
+        , Func<string, IEnumerable<string>> term_filter)
     {
-      return get_tagged_strings_from_file(fileid, get_tagged_term_from_string);
-    }
-
-    public static IEnumerable<string> get_tagged_strings_from_file(string fileid, Func<string, IEnumerable<string>> tagged_term_filter)
-    {
-      foreach (var line in FilesAndFolders.FileContentsByLine(fileid))
+      foreach (var line in line_generator())
       {
         if (!is_empty(line) && !is_comment(line))
         {
@@ -186,6 +143,45 @@ namespace Utilities
           {
             yield return line;
           }
+        }
+      }
+    }
+
+    public static IEnumerable<string> get_NP_strings_from_file(
+          Func<IEnumerable<string>> line_generator
+        , Func<string, IEnumerable<string>> term_filter)
+    {
+      foreach (var line in line_generator())
+      {
+        if (!is_empty(line) && !is_comment(line))
+        {
+          if (is_NP(line) || is_group_boundary(line))
+          {
+            yield return line;
+          }
+        }
+      }
+    }
+
+    public static IEnumerable<string> get_NP_terms_from_file(
+          Func<IEnumerable<string>> line_generator
+        , Func<string, IEnumerable<string>> term_filter)
+    {
+      foreach (var line in line_generator())
+      {
+        if (!is_empty(line) && !is_comment(line))
+        {
+          if (is_NP(line))
+          {
+            yield return "[";
+            foreach (var term in get_term_from_string(trim_brackets(line)))
+            {
+              yield return term;
+            }
+            yield return "]";
+          }
+          else if (is_group_boundary(line))
+            yield return line;
         }
       }
     }

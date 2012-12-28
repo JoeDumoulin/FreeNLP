@@ -23,23 +23,17 @@ namespace CorpusReader
     private static Regex wsj = new Regex("wsj");
     private static Regex brown = new Regex("brown");
 
-    protected static IEnumerable<string> read_tagged_lines(Regex corpus, string fileid)
-    {
-      return read_tagged_lines(corpus, fileid
-        , TextTools.get_tagged_strings_from_file
-        , TextTools.get_tagged_term_from_string);
-    }
-
-    protected static IEnumerable<string> read_tagged_lines(Regex corpus, string fileid
-        , Func<string, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+    // reads multiple lines and puts them together beteen section boundaries.
+    protected static IEnumerable<string> read_lines(Regex corpus, string fileid
+        , Func<IEnumerable<string>> line_generator
+        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       if (corpus.IsMatch(fileid))
       {
         var term_list = new List<string>();
-        foreach (var line in line_filter(fileid, term_filter))
+        foreach (var line in line_filter(line_generator, term_filter))
         {
-          //Console.WriteLine(line);
           if (line != String.Empty && !TextTools.is_metadata_line(line))
           {
             if (!TextTools.is_group_boundary(line))
@@ -58,33 +52,33 @@ namespace CorpusReader
       }
     }
 
-    public static IEnumerable<string> read_atis(string fileid
-        , Func<string, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+    public static IEnumerable<string> read_atis(string line_source, Func<IEnumerable<string>> line_generator
+        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
 
     {
-      return read_tagged_lines(CorpusReader.atis, fileid, line_filter, term_filter);
+      return read_lines(CorpusReader.atis, line_source, line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_switchboard(string fileid
-        , Func<string, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+    public static IEnumerable<string> read_switchboard(string line_source, Func<IEnumerable<string>> line_generator
+        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_tagged_lines(CorpusReader.switchboard, fileid, line_filter, term_filter);
+      return read_lines(CorpusReader.switchboard, line_source, line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_wsj(string fileid
-        , Func<string, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+    public static IEnumerable<string> read_wsj(string line_source, Func<IEnumerable<string>> line_generator
+        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_tagged_lines(CorpusReader.wsj, fileid, line_filter, term_filter);
+      return read_lines(CorpusReader.wsj, line_source, line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_brown(string fileid
-        , Func<string, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+    public static IEnumerable<string> read_brown(string line_source, Func<IEnumerable<string>> line_generator
+        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_tagged_lines(CorpusReader.brown, fileid, line_filter, term_filter);
+      return read_lines(CorpusReader.brown, line_source, line_generator, line_filter, term_filter);
     }
 
 

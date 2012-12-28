@@ -34,7 +34,7 @@ namespace TestFilesAndFolders
     }
 
         [Test]
-    public void test__new_line_length()
+    public void test_new_line_length()
     {
       string test0 = @"this is a test";
       string test1 = test0 + "\n";
@@ -107,29 +107,36 @@ namespace TestFilesAndFolders
       Assert.AreEqual(TextTools.get_term_from_tagged_term(matchstring1), "");
     }
 
+    //[Test]
+    //public void test_get_text_from_line()
+    //{
+    //  string matchstring1 = "Santa";
+    //  string matchstring2 = "Clause";
+    //  string matchstring = matchstring1 + " " + matchstring2;
+
+    //  string test = matchstring1 + "/NP" + " " + matchstring2 + "/NP";
+
+    //  Assert.AreEqual(TextTools.get_text_from_line(test), matchstring);
+    //}
+
     [Test]
-    public void test_strip_tags_from_terms()
+    public void test_get_any_term_from_string()
     {
       string matchstring1 = "Santa";
-      string matchstring2 = "Clause";
-      string matchstring = matchstring1 + " " + matchstring2;
+      string matchstring2 = "Santa Clause";
+      string matchstring3 = "======";
 
-      string test = matchstring1 + "/NP" + " " + matchstring2 + "/NP";
-
-      MatchCollection ms = (new Regex(@"\S+")).Matches(test);
-      Assert.AreEqual(TextTools.strip_tags_from_terms(ms).Aggregate((a1, a2) => a1 + " " + a2), matchstring);
+      Assert.AreEqual(TextTools.get_any_term_from_string(matchstring3).First(), matchstring3);
     }
 
     [Test]
-    public void test_get_text_from_line()
+    public void test_is_group_boundary()
     {
-      string matchstring1 = "Santa";
-      string matchstring2 = "Clause";
-      string matchstring = matchstring1 + " " + matchstring2;
+      Assert.IsTrue(TextTools.is_group_boundary("==="));
+      Assert.IsTrue(TextTools.is_group_boundary(" === "));
+      Assert.IsTrue(TextTools.is_group_boundary(" =abcd "));
+      Assert.IsFalse(TextTools.is_group_boundary("santa clause"));
 
-      string test = matchstring1 + "/NP" + " " + matchstring2 + "/NP";
-
-      Assert.AreEqual(TextTools.get_text_from_line(test), matchstring);
     }
   }
 }
