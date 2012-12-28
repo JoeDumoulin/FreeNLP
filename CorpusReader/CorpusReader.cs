@@ -26,13 +26,13 @@ namespace CorpusReader
     // reads multiple lines and puts them together beteen section boundaries.
     protected static IEnumerable<string> read_lines(Regex corpus, string fileid
         , Func<IEnumerable<string>> line_generator
-        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       if (corpus.IsMatch(fileid))
       {
         var term_list = new List<string>();
-        foreach (var line in line_filter(line_generator, term_filter))
+        foreach (var line in line_filter(line_generator))
         {
           if (line != String.Empty && !TextTools.is_metadata_line(line))
           {
@@ -53,7 +53,7 @@ namespace CorpusReader
     }
 
     public static IEnumerable<string> read_atis(string line_source, Func<IEnumerable<string>> line_generator
-        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
 
     {
@@ -61,21 +61,21 @@ namespace CorpusReader
     }
 
     public static IEnumerable<string> read_switchboard(string line_source, Func<IEnumerable<string>> line_generator
-        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       return read_lines(CorpusReader.switchboard, line_source, line_generator, line_filter, term_filter);
     }
 
     public static IEnumerable<string> read_wsj(string line_source, Func<IEnumerable<string>> line_generator
-        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       return read_lines(CorpusReader.wsj, line_source, line_generator, line_filter, term_filter);
     }
 
     public static IEnumerable<string> read_brown(string line_source, Func<IEnumerable<string>> line_generator
-        , Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       return read_lines(CorpusReader.brown, line_source, line_generator, line_filter, term_filter);

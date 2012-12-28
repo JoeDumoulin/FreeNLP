@@ -18,6 +18,7 @@ namespace Utilities
     private static string windows_newline = "\r\n";
     private static string unix_newline = "\n"; 
 
+    // term predicates
     public static bool is_comment(string text)
     {
       if (text.First() == '*')
@@ -42,6 +43,25 @@ namespace Utilities
       return false;
     }
 
+    public static bool is_empty(string text)
+    { // true only if the entire string is whitespace
+      Match m = whitespace.Match(text);
+      if (m.Length == text.Length)
+      {
+        return true;
+      }
+      return false;
+    }
+
+    public static bool is_NP(string text)
+    {
+      if (text.Trim().First() == '[')
+      {
+        return true;
+      }
+      return false;
+    }
+
     public static int get_newline_length(string text)
     {
       if (text.EndsWith(windows_newline))
@@ -61,25 +81,6 @@ namespace Utilities
       return replace_with_space? 
           text.Substring(0,text.Length-newline_len)+ " " 
         : text.Substring(0,text.Length-newline_len) ;
-    }
-
-    public static bool is_empty(string text)
-    { // true only if the entire string is whitespace
-      Match m = whitespace.Match(text);
-      if (m.Length == text.Length)
-      {
-        return true;
-      }
-      return false;
-    }
-
-    public static bool is_NP(string text)
-    {
-      if (text.Trim().First() == '[')
-      {
-        return true;
-      }
-      return false;
     }
 
     public static string trim_brackets(string text)
@@ -147,23 +148,8 @@ namespace Utilities
       }
     }
 
-    public static IEnumerable<string> get_NP_strings_from_file(
-          Func<IEnumerable<string>> line_generator
-        , Func<string, IEnumerable<string>> term_filter)
-    {
-      foreach (var line in line_generator())
-      {
-        if (!is_empty(line) && !is_comment(line))
-        {
-          if (is_NP(line) || is_group_boundary(line))
-          {
-            yield return line;
-          }
-        }
-      }
-    }
 
-    public static IEnumerable<string> get_NP_terms_from_file(
+    public static IEnumerable<string> get_NP_strings_from_file(
           Func<IEnumerable<string>> line_generator
         , Func<string, IEnumerable<string>> term_filter)
     {
@@ -174,7 +160,7 @@ namespace Utilities
           if (is_NP(line))
           {
             yield return "[";
-            foreach (var term in get_term_from_string(trim_brackets(line)))
+            foreach (var term in term_filter(trim_brackets(line)))
             {
               yield return term;
             }

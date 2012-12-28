@@ -16,7 +16,7 @@ namespace DebugTest
     {
       var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
       var treebank = new Treebank3CorpusReader(path);
-      foreach (var content in treebank.read_NP_terms())
+      foreach (var content in treebank.read_NP_tags())
       {
         //var x = content;
         Console.WriteLine(content);

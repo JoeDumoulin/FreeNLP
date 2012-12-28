@@ -66,7 +66,7 @@ namespace CorpusReader
     }
 
     public IEnumerable<string> read_subcorpora(
-        Func<Func<IEnumerable<string>>, Func<string, IEnumerable<string>>, IEnumerable<string>> line_filter
+        Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
       foreach (var f in fileids(_sent_pattern))
@@ -94,28 +94,45 @@ namespace CorpusReader
 
     public IEnumerable<string> read_sents()
     {
-      return read_subcorpora(TextTools.get_tagged_strings_from_file, TextTools.get_term_from_string);
+      return read_subcorpora(
+            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+          , TextTools.get_term_from_string);
     }
 
     public IEnumerable<string> read_tagged_sents()
     {
-      return read_subcorpora(TextTools.get_tagged_strings_from_file, TextTools.get_tagged_term_from_string);
+      return read_subcorpora(
+            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+          , TextTools.get_tagged_term_from_string);
     }
 
     public IEnumerable<string> read_tags()
     {
-      return read_subcorpora(TextTools.get_tagged_strings_from_file, TextTools.get_tag_from_string);
+      return read_subcorpora(
+            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+          , TextTools.get_tag_from_string);
     }
 
     //TODO: read_NP_Chunks
     public IEnumerable<string> read_NPs()
     {
-      return read_subcorpora(TextTools.get_NP_strings_from_file, TextTools.get_any_term_from_string);
+      return read_subcorpora(
+            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_any_term_from_string)
+          , TextTools.get_any_term_from_string);
     }
 
     public IEnumerable<string> read_NP_terms()
     {
-      return read_subcorpora(TextTools.get_NP_terms_from_file, TextTools.get_any_term_from_string);
+      return read_subcorpora(
+            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_term_from_string)
+          , TextTools.get_any_term_from_string);
+    }
+
+    public IEnumerable<string> read_NP_tags()
+    {
+      return read_subcorpora(
+            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_tag_from_string)
+          , TextTools.get_any_term_from_string);
     }
 
 
