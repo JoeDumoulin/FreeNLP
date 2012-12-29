@@ -23,13 +23,19 @@ namespace CorpusReader
     private static Regex wsj = new Regex("wsj");
     private static Regex brown = new Regex("brown");
 
+    public static bool subcorpus_pred(Regex corpus, string match_string)
+    {
+      return corpus.IsMatch(match_string);
+    }
+
     // reads multiple lines and puts them together beteen section boundaries.
-    protected static IEnumerable<string> read_lines(Regex corpus, string fileid
+    protected static IEnumerable<string> read_lines(
+          Func<bool> corpus_pred
         , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      if (corpus.IsMatch(fileid))
+      if (corpus_pred())
       {
         var term_list = new List<string>();
         foreach (var line in line_filter(line_generator))
@@ -52,33 +58,35 @@ namespace CorpusReader
       }
     }
 
-    public static IEnumerable<string> read_atis(string line_source, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_atis(Func<Regex, bool> corpus_pred
+        , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
 
     {
-      return read_lines(CorpusReader.atis, line_source, line_generator, line_filter, term_filter);
+      return read_lines(() => corpus_pred(CorpusReader.atis), line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_switchboard(string line_source, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_switchboard(Func<Regex, bool> corpus_pred
+        , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_lines(CorpusReader.switchboard, line_source, line_generator, line_filter, term_filter);
+      return read_lines(() => corpus_pred(CorpusReader.switchboard), line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_wsj(string line_source, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_wsj(Func<Regex, bool> corpus_pred, Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_lines(CorpusReader.wsj, line_source, line_generator, line_filter, term_filter);
+      return read_lines(() => corpus_pred(CorpusReader.wsj), line_generator, line_filter, term_filter);
     }
 
-    public static IEnumerable<string> read_brown(string line_source, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_brown(Func<Regex, bool> corpus_pred, Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      return read_lines(CorpusReader.brown, line_source, line_generator, line_filter, term_filter);
+      return read_lines(() => corpus_pred(CorpusReader.brown), line_generator, line_filter, term_filter);
     }
 
 

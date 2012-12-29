@@ -171,5 +171,19 @@ namespace Utilities
         }
       }
     }
+
+    public static IEnumerable<string> get_parsed_strings_from_file(
+          Func<IEnumerable<string>> line_generator
+        , Func<string, IEnumerable<string>> term_filter)
+    {
+      foreach (var line in line_generator())
+      {
+        if (!is_empty(line) && !is_comment(line))
+        {
+          yield return line;
+        }
+      }
+    }
+
   }
 }

@@ -65,77 +65,85 @@ namespace CorpusReader
       }
     }
 
-    public IEnumerable<string> read_subcorpora(
-        Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
+    public IEnumerable<string> read_subcorpora(string file_pattern
+        , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
         , Func<string, IEnumerable<string>> term_filter)
     {
-      foreach (var f in fileids(_sent_pattern))
+      foreach (var f in fileids(file_pattern))
       {
-        Func<IEnumerable<string>> lines = () => FilesAndFolders.FileContentsByLine(f);
-        foreach (var line in CorpusReader.read_atis(f, lines, line_filter, term_filter))
+        Func<Regex, bool> corpus_pred = (regex) => CorpusReader.subcorpus_pred(regex, f);
+        Func<IEnumerable<string>> line_generator = () => FilesAndFolders.FileContentsByLine(f);
+        foreach (var line in CorpusReader.read_atis(corpus_pred, line_generator, line_filter, term_filter))
         {
           yield return line;
         }
-        foreach (var line in CorpusReader.read_switchboard(f, lines, line_filter, term_filter))
+        foreach (var line in CorpusReader.read_switchboard(corpus_pred, line_generator, line_filter, term_filter))
         {
           yield return line;
         }
-        foreach (var line in CorpusReader.read_wsj(f, lines, line_filter, term_filter))
+        foreach (var line in CorpusReader.read_wsj(corpus_pred, line_generator, line_filter, term_filter))
         {
           yield return line;
         }
-        foreach (var line in CorpusReader.read_brown(f, lines, line_filter, term_filter))
+        foreach (var line in CorpusReader.read_brown(corpus_pred, line_generator, line_filter, term_filter))
         {
           yield return line;
         }
       }
     }
 
-
+    // raw (tagged) sections
     public IEnumerable<string> read_sents()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
           , TextTools.get_term_from_string);
     }
 
     public IEnumerable<string> read_tagged_sents()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
           , TextTools.get_tagged_term_from_string);
     }
 
     public IEnumerable<string> read_tags()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_tagged_strings_from_file(lg, TextTools.get_any_term_from_string)
           , TextTools.get_tag_from_string);
     }
 
-    //TODO: read_NP_Chunks
+    // read_NP_Chunks
     public IEnumerable<string> read_NPs()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_any_term_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_any_term_from_string)
           , TextTools.get_any_term_from_string);
     }
 
     public IEnumerable<string> read_NP_terms()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_term_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_term_from_string)
           , TextTools.get_any_term_from_string);
     }
 
     public IEnumerable<string> read_NP_tags()
     {
-      return read_subcorpora(
-            (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_tag_from_string)
+      return read_subcorpora(_sent_pattern
+          , (lg) => TextTools.get_NP_strings_from_file(lg, TextTools.get_tag_from_string)
           , TextTools.get_any_term_from_string);
     }
 
 
     // TODO: read_parses
+    public IEnumerable<string> read_parse_trees()
+    {
+      return read_subcorpora(_parsed_pattern
+          , (lg) => TextTools.get_parsed_strings_from_file(lg, TextTools.get_any_term_from_string)
+          , TextTools.get_any_term_from_string);
+    }
+
   }
 }
