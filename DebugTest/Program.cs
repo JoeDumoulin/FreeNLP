@@ -50,9 +50,9 @@ namespace DebugTest
       //{
       //  Console.WriteLine(address);
       //}
-      foreach (var address in inaugural.words())
+      foreach (var address in inaugural.words().Where((x) => x != ", ").NGram(3).Take(100))
       {
-        Console.WriteLine(address);
+        Console.WriteLine(address.DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b));
       }
       // A little test
       //var r = new Regex(@"([^\s]+)");

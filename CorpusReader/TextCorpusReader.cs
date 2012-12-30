@@ -60,12 +60,19 @@ namespace CorpusReader
       var path = "";
       if (fileid != String.Empty)
         path  = Path.Combine(_path, fileid);
-      foreach (var line in read_raw(path))
+      else
       {
-        foreach (var token in _splitter.Split(line))
+        foreach (var f in fileids())
         {
-          if (token != String.Empty && token != " ")
-            yield return token;
+          path  = Path.Combine(_path, f);
+          foreach (var line in read_raw(path))
+          {
+            foreach (var token in _splitter.Split(line))
+            {
+              if (token != String.Empty && token != " ")
+                yield return token;
+            }
+          }
         }
       }
     }
