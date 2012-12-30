@@ -65,7 +65,7 @@ namespace CorpusReader
         foreach (var f in fileids())
         {
           path  = Path.Combine(_path, f);
-          foreach (var line in read_raw(path))
+          foreach (var line in read_raw(f))
           {
             foreach (var token in _splitter.Split(line))
             {

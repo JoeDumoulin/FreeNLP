@@ -34,6 +34,13 @@ namespace Utilities
       }
     }
 
+    public Frequencies(IEnumerable<string> data)
+    {
+      _counts = new Dictionary<string,double>();
+      foreach (var term in data)
+        Add(term);
+    }
+
     public void Add(string term)
     {
       if (_counts.ContainsKey(term))

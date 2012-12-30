@@ -50,9 +50,14 @@ namespace DebugTest
       //{
       //  Console.WriteLine(address);
       //}
-      foreach (var address in inaugural.words().Where((x) => x != ", ").NGram(3).Take(100))
+      var f = new Frequencies();
+      foreach (var address in inaugural.words().Where((x) => x != ", ").NGram(3))
       {
-        Console.WriteLine(address.DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b));
+        f.Add(address.DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b));
+      }
+      foreach (var term in f.Generator().OrderBy(p => p.Value).Reverse().Take(10))
+      {
+        Console.WriteLine(String.Format(@"{0}: {1}", term.Key, term.Value));
       }
       // A little test
       //var r = new Regex(@"([^\s]+)");

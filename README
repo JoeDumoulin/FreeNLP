@@ -52,11 +52,40 @@ Example 2: split corpus terms by spaces
         Console.WriteLine(term);
       }
 
+Example 3: get the first 100 trigrams from President washington's first inaugural address.
+      // find the presidents' inaugural addresses.
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\inaugural");
+
+      // open a TextCorpusReader for this corpus
+      var inaugural = new TextCorpusReader(path);
+
+      // read the first 100 trigrams ignoring commas
+      foreach (var address in inaugural.words("1789-Washington.txt").Where((x) => x != ", ").NGram(3).Take(100))
+        Console.WriteLine(address);
+
+Example 4: get the 10 most frequent trigrams in all the presidents' inaugural addresses.
+      // assume corpus reader as above..
+
+      // build a frequency object for the trigrams in the corpus
+      var f = new Frequencies();
+      foreach (var address in inaugural.words().Where((x) => x != ", ").NGram(3))
+      {
+        // aggregate the trigram into a string.
+        f.Add(address.DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b));
+      }
+
+      // print the top 10
+      foreach (var term in f.Generator().OrderBy(p => p.Value).Reverse().Take(10))
+      {
+        Console.WriteLine(String.Format(@"{0}: {1}", term.Key, term.Value));
+      }
+
+
 ===========================================================================================
 
-License
-Copyright (c) 2012, Joe Dumoulin
-All rights reserved.
+License<br>
+Copyright (c) 2012, Joe Dumoulin<br>
+All rights reserved.<br>
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
