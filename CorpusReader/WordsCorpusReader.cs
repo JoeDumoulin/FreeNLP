@@ -7,11 +7,11 @@ using Utilities;
 
 namespace CorpusReader
 {
-  public class StopwordsCorpusReader : ICorpusReader
+  public class WordsCorpusReader : ICorpusReader
   {
     private string _path;
 
-    public StopwordsCorpusReader(string path)
+    public WordsCorpusReader(string path)
     {
       _path = path;
     }
@@ -20,7 +20,8 @@ namespace CorpusReader
     {
       foreach (var f in FilesAndFolders.ListFolderContentsFromBase(_path, pattern))
       {
-        yield return f;
+        if (Path.GetFileName(f) != "README")
+          yield return f;
       }
     }
 

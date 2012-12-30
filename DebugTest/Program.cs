@@ -39,10 +39,20 @@ namespace DebugTest
       //  Console.WriteLine(word);
       //}
 
-      var stops = new StopwordsCorpusReader(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/stopwords"));
-      foreach (var stop in stops.words("english"))
+      //var stops = new WordsCorpusReader(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/stopwords"));
+      //foreach (var stop in stops.words("english"))
+      //{
+      //  Console.WriteLine(stop);
+      //}
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\inaugural");
+      var inaugural = new TextCorpusReader(path);
+      //foreach (var address in inaugural.read_raw(Path.Combine(path, "1789-Washington.txt")))
+      //{
+      //  Console.WriteLine(address);
+      //}
+      foreach (var address in inaugural.words())
       {
-        Console.WriteLine(stop);
+        Console.WriteLine(address);
       }
       // A little test
       //var r = new Regex(@"([^\s]+)");
