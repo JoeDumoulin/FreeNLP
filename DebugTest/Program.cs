@@ -14,13 +14,13 @@ namespace DebugTest
   {
     static void Main(string[] args)
     {
-      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
-      var treebank = new Treebank3CorpusReader(path);
-      foreach (var content in treebank.words())
-      {
-        //var x = content;
-        Console.WriteLine(content);
-      }
+      //var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
+      //var treebank = new Treebank3CorpusReader(path);
+      //foreach (var content in treebank.words())
+      //{
+      //  //var x = content;
+      //  Console.WriteLine(content);
+      //}
       //var freq = new Frequencies(TextExamples.emma());
       //foreach (var term in freq.Generator().OrderBy(p => p.Value))
       //{
@@ -33,10 +33,17 @@ namespace DebugTest
       //}
 
       //var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/Treebank");
-      //foreach (var p in FilesAndFolders.ListFolderContentsFromBase(path, "*.mrg"))
+      //var treebank = new NLTKTreebankCorpusReader(path);
+      //foreach (var word in treebank.words())
       //{
-      //  Console.WriteLine(p);
+      //  Console.WriteLine(word);
       //}
+
+      var stops = new StopwordsCorpusReader(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/stopwords"));
+      foreach (var stop in stops.words("english"))
+      {
+        Console.WriteLine(stop);
+      }
       // A little test
       //var r = new Regex(@"([^\s]+)");
       //foreach (var term in r.Split(FileAndFolders.AllFileContents(path)))

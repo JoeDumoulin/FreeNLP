@@ -72,5 +72,16 @@ namespace CorpusReader
         }
       }
     }
+
+    public IEnumerable<string> words(string fileid = "")
+    {
+      foreach (var sent in read_raw(fileid))
+      {
+        foreach (var word in sent.Split(' '))
+        {
+          yield return word;
+        }
+      }
+    }
   }
 }

@@ -14,6 +14,9 @@ namespace CorpusReader
     IEnumerable<string> fileids(string pattern = @"*.*");
 
     IEnumerable<string> read_raw(string fileid = "");
+
+    IEnumerable<string> words(string fileid = "");
+
   }
 
   public class CorpusReader

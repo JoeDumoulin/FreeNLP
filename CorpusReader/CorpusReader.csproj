@@ -43,6 +43,7 @@
     <Compile Include="CorpusReader.cs" />
     <Compile Include="NLTKTreebankCorpusReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StopwordsCorpusReader.cs" />
     <Compile Include="Treebank3CorpusReader.cs" />
   </ItemGroup>
   <ItemGroup>

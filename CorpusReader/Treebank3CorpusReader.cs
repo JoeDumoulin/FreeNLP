@@ -11,7 +11,7 @@ namespace CorpusReader
   public class Treebank3CorpusReader : ICorpusReader
   {
     private string _path;
-    private static string _sent_pattern = @"*.pos"; // no extension.  have to parse for these manually.
+    private static string _sent_pattern = @"*.pos"; 
     private static string _parsed_pattern = @"*.prd";
     private static string _combined_pattern = @"*.mrg";
 
