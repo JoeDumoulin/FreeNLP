@@ -28,12 +28,13 @@ namespace CorpusReader
       return corpus.IsMatch(match_string);
     }
 
-    // reads multiple lines and puts them together beteen section boundaries.
-    protected static IEnumerable<string> read_lines(
-          Func<bool> corpus_pred
+    // reads multiple lines and puts them together between section boundaries.
+    protected static IEnumerable<string> read_lines(Func<string, bool> group_boundary_pred
+        , Func<bool> corpus_pred
         , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
-        , Func<string, IEnumerable<string>> term_filter)
+        , Func<string, IEnumerable<string>> term_filter
+        , bool preserve_boundary)
     {
       if (corpus_pred())
       {
@@ -42,12 +43,14 @@ namespace CorpusReader
         {
           if (line != String.Empty && !TextTools.is_metadata_line(line))
           {
-            if (!TextTools.is_group_boundary(line))
+            if (!group_boundary_pred(line))
             {
               term_list.Add(term_filter(line).DefaultIfEmpty("").Aggregate((a1, a2) => a1 + " " + a2));
             }
-            if (TextTools.is_group_boundary(line))
+            if (group_boundary_pred(line))
             {
+              if (preserve_boundary)
+                term_list.Add(term_filter(line).DefaultIfEmpty("").Aggregate((a1, a2) => a1 + " " + a2));
               string new_line = term_list.DefaultIfEmpty("").Aggregate((x, y) => x + " " + y);
               if (new_line != "")
                 yield return new_line;
@@ -58,35 +61,49 @@ namespace CorpusReader
       }
     }
 
-    public static IEnumerable<string> read_atis(Func<Regex, bool> corpus_pred
+    public static IEnumerable<string> read_atis(Func<string, bool> group_boundary_pred
+        , Func<Regex, bool> corpus_pred
         , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
-        , Func<string, IEnumerable<string>> term_filter)
+        , Func<string, IEnumerable<string>> term_filter
+        , bool preserve_boundary)
 
     {
-      return read_lines(() => corpus_pred(CorpusReader.atis), line_generator, line_filter, term_filter);
+      Func<bool> atis_pred = () => corpus_pred(CorpusReader.atis);
+      return read_lines(group_boundary_pred, atis_pred, line_generator, line_filter, term_filter, preserve_boundary);
     }
 
-    public static IEnumerable<string> read_switchboard(Func<Regex, bool> corpus_pred
+    public static IEnumerable<string> read_switchboard(Func<string, bool> group_boundary_pred
+        , Func<Regex, bool> corpus_pred
         , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
-        , Func<string, IEnumerable<string>> term_filter)
+        , Func<string, IEnumerable<string>> term_filter
+        , bool preserve_boundary)
     {
-      return read_lines(() => corpus_pred(CorpusReader.switchboard), line_generator, line_filter, term_filter);
+      Func<bool> switchboard_pred = () => corpus_pred(CorpusReader.switchboard);
+      return read_lines(group_boundary_pred, switchboard_pred, line_generator, line_filter, term_filter, preserve_boundary);
     }
 
-    public static IEnumerable<string> read_wsj(Func<Regex, bool> corpus_pred, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_wsj(Func<string, bool> group_boundary_pred
+        , Func<Regex, bool> corpus_pred
+        , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
-        , Func<string, IEnumerable<string>> term_filter)
+        , Func<string, IEnumerable<string>> term_filter
+        , bool preserve_boundary)
     {
-      return read_lines(() => corpus_pred(CorpusReader.wsj), line_generator, line_filter, term_filter);
+      Func<bool> wsj_pred = () => corpus_pred(CorpusReader.wsj);
+      return read_lines(group_boundary_pred, wsj_pred, line_generator, line_filter, term_filter, preserve_boundary);
     }
 
-    public static IEnumerable<string> read_brown(Func<Regex, bool> corpus_pred, Func<IEnumerable<string>> line_generator
+    public static IEnumerable<string> read_brown(Func<string, bool> group_boundary_pred
+        , Func<Regex, bool> corpus_pred
+        , Func<IEnumerable<string>> line_generator
         , Func<Func<IEnumerable<string>>, IEnumerable<string>> line_filter
-        , Func<string, IEnumerable<string>> term_filter)
+        , Func<string, IEnumerable<string>> term_filter
+        , bool preserve_boundary)
     {
-      return read_lines(() => corpus_pred(CorpusReader.brown), line_generator, line_filter, term_filter);
+      Func<bool> brown_pred = () => corpus_pred(CorpusReader.brown);
+      return read_lines(group_boundary_pred, brown_pred, line_generator, line_filter, term_filter, preserve_boundary);
     }
 
 
