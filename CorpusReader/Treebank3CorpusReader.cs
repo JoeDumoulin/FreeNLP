@@ -12,7 +12,6 @@ namespace CorpusReader
   {
     private string _path;
     private static string _sent_pattern = @"*.pos"; // no extension.  have to parse for these manually.
-    private static string _tagged_pattern = @"*.pos";
     private static string _parsed_pattern = @"*.prd";
     private static string _combined_pattern = @"*.mrg";
 
@@ -30,6 +29,16 @@ namespace CorpusReader
       }
     }
 
+    public IEnumerable<string> words(string fileid = "")
+    {
+      foreach (var sent in read_sents(fileid))
+      {
+        foreach (var word in sent.Split(' '))
+        {
+          yield return word;
+        }
+      }
+    }
 
     public IEnumerable<string> read_raw(string fileid = "")
     {
@@ -53,14 +62,24 @@ namespace CorpusReader
       }
     }
 
-    public IEnumerable<string> read_sents(string fileid)
+    public IEnumerable<string> read_sents(string fileid = "")
     {
-      foreach (var line in TextTools.get_tagged_strings_from_file(
-               () => FilesAndFolders.FileContentsByLine(fileid), TextTools.get_term_from_string))
+      if (fileid=="")
       {
-        if (!TextTools.is_empty(line))
+        foreach (var line in read_sents())
         {
           yield return line;
+        }
+      }
+      else
+      {
+        foreach (var line in TextTools.get_tagged_strings_from_file(
+                 () => FilesAndFolders.FileContentsByLine(fileid), TextTools.get_term_from_string))
+        {
+          if (!TextTools.is_empty(line))
+          {
+            yield return line;
+          }
         }
       }
     }
@@ -195,7 +214,7 @@ namespace CorpusReader
     }
 
 
-    // TODO: read_parses
+    // read_parses
     public IEnumerable<string> read_parse_trees()
     {
       return read_parsed_subcorpora(_parsed_pattern
@@ -209,8 +228,5 @@ namespace CorpusReader
           , (lg) => TextTools.get_parsed_strings_from_file(lg, TextTools.get_any_term_from_string)
           , TextTools.get_any_term_from_string);
     }
-
-
-
   }
 }
