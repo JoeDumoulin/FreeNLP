@@ -5,8 +5,8 @@
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\FreeNLPUseCases.nunit" Expanded="true" />
-    <Node UniqueName="[0-1028]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\TestFilesAndFolders\bin\Debug\TestFilesAndFolders.dll" Expanded="true" />
-    <Node UniqueName="[0-1029]TestFilesAndFolders" Expanded="true" />
-    <Node UniqueName="[0-1004]TestFilesAndFolders.TestTextTools" Expanded="true" />
+    <Node UniqueName="[0-1026]C:\Users\joe\Documents\Visual Studio 2010\Projects\FreeNLP\TestFilesAndFolders\bin\Debug\TestFilesAndFolders.dll" Expanded="true" />
+    <Node UniqueName="[0-1027]TestFilesAndFolders" Expanded="true" />
+    <Node UniqueName="[0-1015]TestFilesAndFolders.TestFrequency" Expanded="true" />
   </Nodes>
 </VisualState>

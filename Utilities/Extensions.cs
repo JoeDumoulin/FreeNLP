@@ -56,5 +56,10 @@ namespace Utilities
         }
       }
     }
+
+    public static Frequencies<T> Freqs<T>(this IEnumerable<T> source)
+    {
+      return new Frequencies<T>(source);
+    }
   }
 }

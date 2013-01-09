@@ -6,42 +6,23 @@ using System.Text.RegularExpressions;
 
 namespace Utilities
 {
-  public class Frequencies
+  public class Frequencies<T>
   {
-    private Dictionary<string, double> _counts;
+    private Dictionary<T, double> _counts;
 
     public Frequencies()
     {
-      _counts = new Dictionary<string,double>();
+      _counts = new Dictionary<T,double>();
     }
 
-    public Frequencies(string text)
+    public Frequencies(IEnumerable<T> data)
     {
-      _counts = new Dictionary<string, double>();
-      var pattern = new Regex(@"(\W+)");
-      foreach (var term in pattern.Split(text))
-      {
-        Add(term);
-      }
-    }
-
-    public Frequencies(string text, Regex pattern)
-    {
-      _counts = new Dictionary<string, double>();
-      foreach (var term in pattern.Split(text))
-      {
-        Add(term);
-      }
-    }
-
-    public Frequencies(IEnumerable<string> data)
-    {
-      _counts = new Dictionary<string,double>();
+      _counts = new Dictionary<T,double>();
       foreach (var term in data)
         Add(term);
     }
 
-    public void Add(string term)
+    public void Add(T term)
     {
       if (_counts.ContainsKey(term))
         _counts[term]++;
@@ -51,7 +32,7 @@ namespace Utilities
       }
     }
 
-    public IEnumerable<string> Terms()
+    public IEnumerable<T> Terms()
     {
       foreach (var term in _counts.Keys)
       {
@@ -59,17 +40,92 @@ namespace Utilities
       }
      }
 
-    public double Get(string term)
+    public double Get(T term)
     {
       return _counts[term];
     }
 
-    public IEnumerable<KeyValuePair<string, double>> Generator()
+    public IEnumerable<KeyValuePair<T, double>> Generate()
     {
       foreach (var term in _counts)
       {
         yield return term;
       }
+    }
+
+    public double Count()
+    {
+      return _counts.Values.Sum();
+    }
+  }
+
+  public class ConditionalFrequencies
+  {
+    Dictionary<string, Frequencies<string>> _counts;
+
+    public ConditionalFrequencies()
+    {
+      _counts = new Dictionary<string, Frequencies<string>>();
+    }
+
+    public void Add(IEnumerable<string> termlist)
+    {
+      var data = condition_and_event_from_list(termlist);
+      if (!_counts.ContainsKey(data.Key))
+      {
+        _counts.Add(data.Key, new Frequencies<string>());
+      }
+
+      _counts[data.Key].Add(data.Value);
+    }
+
+    public IEnumerable<string> Conditions()
+    {
+      foreach (var term in _counts)
+      {
+        yield return term.Key;
+      }
+    }
+
+    public IEnumerable<Frequencies<string>> Values()
+    {
+      foreach (var terms in _counts)
+      {
+        yield return terms.Value;
+      }
+    }
+
+    public IEnumerable<KeyValuePair<string, Frequencies<string>>> Generate()
+    {
+      foreach (var terms in _counts)
+      {
+        yield return terms;
+      }
+    }
+
+    private KeyValuePair<string, string> condition_and_event_from_list(IEnumerable<string> termlist)
+    {
+      if (termlist.Count() < 2) throw new ArgumentException("termlist has < 2 terms.");
+
+      using(var iterator = termlist.Reverse().GetEnumerator())
+      {
+        if (iterator.MoveNext())
+        {
+          var evt = iterator.Current;
+          if (!iterator.MoveNext()) throw new ArgumentException("can't parse termlist");
+
+          return new KeyValuePair<string, string>(
+              make_base_list(iterator).Reverse().Aggregate((a,b) => a + " " + b), evt);
+        }
+        else throw new ArgumentException("can't parse termlist");
+      }
+    }
+
+    private IEnumerable<string> make_base_list(IEnumerator<string> iterator)
+    {
+      do{
+        yield return iterator.Current;
+      } while (iterator.MoveNext());
     }
   }
 }
