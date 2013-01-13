@@ -61,5 +61,29 @@ namespace Utilities
     {
       return new Frequencies<T>(source);
     }
+
+    // this is actually just Where<>((t)=>filter_predicate(t))
+    public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, Func<T, bool> filter_predicate)
+    {
+      foreach (var value in source)
+      {
+        if (filter_predicate(value))
+        {
+          yield return value;
+        }
+      }
+    }
+    // this is actually just Where<>((t)=>filter_func(t) != null).Select((t)=>filter_func(t))
+    public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, Func<T, T> filter_func)
+    {
+      foreach (var value in source)
+      {
+        var filtered_value = filter_func(value);
+        if (filtered_value != null)
+        {
+          yield return filtered_value;
+        }
+      }
+    }
   }
 }

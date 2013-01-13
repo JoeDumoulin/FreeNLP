@@ -164,6 +164,32 @@ namespace DebugTest
       }
     }
 
+    private static void test_regex_filter_for_noun_phrases_from_wsj()
+    {
+      var pattern = RegexTools.regex_filter_pattern("{J\\S+|N\\S+}{J\\S+|N\\S+|IN\\S|TO\\S}*{N\\S+}");
+      Console.WriteLine(pattern);
+      var treebank = new NLTKTreebankCorpusReader(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/Treebank"));
+      foreach (var content in treebank.read_tagged_sents().Filter((x)=>Regex.Match(x, pattern).Groups[0].Value))
+      {
+        Console.WriteLine(content);
+      }
+    }
+
+    private static void most_common_collocated_NPs_in_Treebank3()
+    {
+      var collocated_words_pattern = RegexTools.regex_filter_pattern("{J\\S+|N\\S+}{J\\S+|N\\S+|IN\\S|TO\\S}*{N\\S+}");
+      Console.WriteLine(collocated_words_pattern);
+
+      var treebank3 = new Treebank3CorpusReader(Path.Combine(
+              Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
+      foreach (var content in treebank3.read_tagged_sents()
+          .Filter((x)=>Regex.Match(x, collocated_words_pattern).Groups[0].Value)
+          .Freqs().Generate().OrderBy((x)=>x.Value).Reverse().Take(200))
+      {
+        Console.WriteLine("{0} : {1}", content.Key, content.Value);
+      }
+    }
+
     static void Main(string[] args)
     {
       //read_treebank3();
@@ -177,11 +203,11 @@ namespace DebugTest
       //read_file_contents_one_word_at_a_time();
 
       //inaugural_ngram_conditional_frequencies();
-      frequencies_of_ngrams_in_emma_sample();
-      frequencies_of_ngrams_in_emma_sample2();
-      
+      //frequencies_of_ngrams_in_emma_sample();
+      //frequencies_of_ngrams_in_emma_sample2();
 
-
+      //test_regex_filter_for_noun_phrases_from_wsj();
+      most_common_collocated_NPs_in_Treebank3();
       }
   }
 }

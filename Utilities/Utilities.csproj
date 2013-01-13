@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collocations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FilesAndFolders.cs" />
     <Compile Include="Frequencies.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexTools.cs" />
     <Compile Include="TextTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
