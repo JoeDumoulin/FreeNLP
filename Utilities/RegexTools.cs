@@ -27,7 +27,7 @@ namespace Utilities
       var subpattern_list = new List<string>();
 
       // Match all the internal patterns
-      MatchCollection internal_matches = Regex.Matches(pattern, @"{([^}]+)}([^{]+)?");
+      MatchCollection internal_matches = Regex.Matches(pattern, @"<([^>]+)>([^<]+)?");
       foreach (Match match in internal_matches)
       {
         var subpattern = make_sub_pattern(match.Groups[1].Value);
@@ -43,6 +43,6 @@ namespace Utilities
       return String.Format("(([^/\\s]+)/({0})\\s)", tag_pattern);
     }
 
-
+    //public static IEnumerable<Regex> 
   }
 }

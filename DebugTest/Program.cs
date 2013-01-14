@@ -177,14 +177,15 @@ namespace DebugTest
 
     private static void most_common_collocated_NPs_in_Treebank3()
     {
-      var collocated_words_pattern = RegexTools.regex_filter_pattern("{J\\S+|N\\S+}{J\\S+|N\\S+|IN\\S|TO\\S}*{N\\S+}");
+      var collocated_words_pattern = RegexTools.regex_filter_pattern("<J\\S+|N\\S+><J\\S+|N\\S+|IN\\S|TO\\S>*<N\\S+>");
       Console.WriteLine(collocated_words_pattern);
 
       var treebank3 = new Treebank3CorpusReader(Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
       foreach (var content in treebank3.read_tagged_sents()
           .Filter((x)=>Regex.Match(x, collocated_words_pattern).Groups[0].Value)
-          .Freqs().Generate().OrderBy((x)=>x.Value).Reverse().Take(200))
+          .Filter((x)=>TextTools.get_term_from_string(x).DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b))
+          .Freqs().Generate().OrderBy((x)=>x.Value).Reverse().Take(1000))
       {
         Console.WriteLine("{0} : {1}", content.Key, content.Value);
       }
