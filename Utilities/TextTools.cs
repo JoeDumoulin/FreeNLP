@@ -14,6 +14,7 @@ namespace Utilities
     public static Regex bracketed_phrase = new Regex(@"\[([^\]]+)\]");
     public static Regex tagged_term = new Regex(@"([^/ ]+)/(\S+)");
     public static Regex metadata_term = new Regex(@"@([^\]]+)");
+    public static Regex punctuation = new Regex(@"[\[\]\(\)\.,:;\?!]");
 
     private static string windows_newline = "\r\n";
     private static string unix_newline = "\n"; 
@@ -60,6 +61,18 @@ namespace Utilities
         return true;
       }
       return false;
+    }
+
+    public static bool is_puctuation(string text)
+    {
+      if (punctuation.IsMatch(text))
+        return true;
+      return false;
+    }
+
+    public static string trim_punctuation(string word)
+    {
+      return punctuation.Split(word).First();
     }
 
     public static int get_newline_length(string text)

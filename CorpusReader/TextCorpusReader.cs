@@ -8,7 +8,7 @@ using Utilities;
 
 namespace CorpusReader
 {
-  public class TextCorpusReader : ICorpusReader
+  public class TextCorpusReader : ICorpusReaderBase
   {
     private static Regex _splitter = new Regex(@"(\W+)");
     private string _path;

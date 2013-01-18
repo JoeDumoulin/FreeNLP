@@ -7,7 +7,7 @@ using Utilities;
 
 namespace CorpusReader
 {
-  public class NLTKTreebankCorpusReader : ICorpusReader
+  public class NLTKTreebankCorpusReader : IParsedCorpusReader
   {
     private string _path;
     private static string _sent_pattern = @""; // no extension.  have to parse for these manually.

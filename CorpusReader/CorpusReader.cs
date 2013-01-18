@@ -8,7 +8,7 @@ using Utilities;
 namespace CorpusReader
 {
 
-  public interface ICorpusReader
+  public interface ICorpusReaderBase
   {
     // pure virtual methods
     IEnumerable<string> fileids(string pattern = @"*.*");
@@ -17,6 +17,16 @@ namespace CorpusReader
 
     IEnumerable<string> words(string fileid = "");
 
+  }
+
+  public interface ITaggedCorpusReader : ICorpusReaderBase
+  {
+    IEnumerable<string> read_tagged_sents(string fileid = "");
+  }
+
+  public interface IParsedCorpusReader : ITaggedCorpusReader
+  {
+    IEnumerable<string> read_parsed_sents(string fileid = "");
   }
 
   public class CorpusReader

@@ -79,8 +79,13 @@ namespace Utilities
 
     public static IEnumerable<string> FileContentsByLine(string filePath)
     {
+      return FileContentsByLine(filePath, Encoding.UTF8);
+    }
+
+    public static IEnumerable<string> FileContentsByLine(string filePath, Encoding encoding)
+    {
       using (var instream = new FileStream(filePath, FileMode.Open))
-      using (var reader = new StreamReader(instream, Encoding.UTF8))
+      using (var reader = new StreamReader(instream, encoding))
       {
         while (!reader.EndOfStream)
           yield return reader.ReadLine();

@@ -7,7 +7,7 @@ using Utilities;
 
 namespace CorpusReader
 {
-  public class WordsCorpusReader : ICorpusReader
+  public class WordsCorpusReader : ICorpusReaderBase
   {
     private string _path;
 

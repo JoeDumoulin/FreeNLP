@@ -37,8 +37,8 @@ namespace FreeNLP.Learning
       var treebank3 = new Treebank3CorpusReader(Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
       foreach (var content in treebank3.read_tagged_sents()
-          .Filter((x) => Regex.Match(x, collocated_words_pattern).Groups[0].Value)
-          .Filter((x) => TextTools.get_term_from_string(x).DefaultIfEmpty("").Aggregate((a, b) => a + " " + b))
+          .Select((x) => Regex.Match(x, collocated_words_pattern).Groups[0].Value)
+          .Select((x) => TextTools.get_term_from_string(x).DefaultIfEmpty("").Aggregate((a, b) => a + " " + b))
           .Freqs().Generate().OrderBy((x) => x.Value))
       {
         yield return content;

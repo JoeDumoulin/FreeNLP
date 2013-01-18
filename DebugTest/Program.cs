@@ -183,11 +183,21 @@ namespace DebugTest
       var treebank3 = new Treebank3CorpusReader(Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
       foreach (var content in treebank3.read_tagged_sents()
-          .Filter((x)=>Regex.Match(x, collocated_words_pattern).Groups[0].Value)
-          .Filter((x)=>TextTools.get_term_from_string(x).DefaultIfEmpty("").Aggregate((a,b)=>a+" "+b))
+          .Select((x)=>Regex.Match(x, collocated_words_pattern).Groups[0].Value)
+          .Select((x) => TextTools.get_term_from_string(x).DefaultIfEmpty("").Aggregate((a, b) => a + " " + b))
           .Freqs().Generate().OrderBy((x)=>x.Value).Reverse().Take(1000))
       {
         Console.WriteLine("{0} : {1}", content.Key, content.Value);
+      }
+    }
+
+    private static void test_floresta_reader()
+    {
+      var floresta = new FlorestaCorpusReader(Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/floresta"));
+      foreach ( var word in floresta.words().Select((x)=>TextTools.trim_punctuation(x)).Freqs().Generate().OrderBy((x)=>x.Value))
+      {
+        Console.WriteLine("{0}: {1}", word.Key, word.Value);
       }
     }
 
@@ -208,7 +218,9 @@ namespace DebugTest
       //frequencies_of_ngrams_in_emma_sample2();
 
       //test_regex_filter_for_noun_phrases_from_wsj();
-      most_common_collocated_NPs_in_Treebank3();
-      }
+      //most_common_collocated_NPs_in_Treebank3();
+
+      test_floresta_reader();
+    }
   }
 }

@@ -8,7 +8,7 @@ using Utilities;
 
 namespace CorpusReader
 {
-  public class Treebank3CorpusReader : ICorpusReader
+  public class Treebank3CorpusReader : ICorpusReaderBase
   {
     private string _path;
     private static string _sent_pattern = @"*.pos"; 
@@ -215,7 +215,7 @@ namespace CorpusReader
 
 
     // read_parses
-    public IEnumerable<string> read_parse_trees()
+    public IEnumerable<string> read_parsed_sents()
     {
       return read_parsed_subcorpora(_parsed_pattern
           , (lg) => TextTools.get_parsed_strings_from_file(lg, TextTools.get_any_term_from_string)
