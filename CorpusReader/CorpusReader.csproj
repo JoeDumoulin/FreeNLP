@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CorpusReader.cs" />
     <Compile Include="FlorestaCorpusReader.cs" />
+    <Compile Include="Mac_morphoCorpusReader.cs" />
     <Compile Include="NLTKTreebankCorpusReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WordsCorpusReader.cs" />

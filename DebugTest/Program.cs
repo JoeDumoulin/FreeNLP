@@ -201,6 +201,37 @@ namespace DebugTest
       }
     }
 
+    private static void test_mac_morpho_reader()
+    {
+      var mac_morpho = new Mac_morphoCorpusReader(Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/mac_morpho"));
+
+      foreach (var word in mac_morpho.words().Where((x)=>!TextTools.is_puctuation(x)).Freqs().Generate().OrderBy((x)=>x.Value))
+      {
+        Console.WriteLine("{0}: {1}", word.Key, word.Value);
+      }
+    }
+
+    private static void portuguese_word_frequency()
+    {
+      var floresta = new FlorestaCorpusReader(Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/floresta"));
+      var mac_morpho = new Mac_morphoCorpusReader(Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data/mac_morpho"));
+
+      using (StreamWriter outfile = new StreamWriter(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "portuguese_words.txt"), false, Encoding.UTF8))
+      {
+        foreach (var word in mac_morpho.words().Where((x) => !TextTools.is_puctuation(x))
+              .Concat(floresta.words().Select((x) => TextTools.trim_punctuation(x)))
+              .Freqs().Generate().OrderBy((x) => x.Value).Reverse())
+        {
+          outfile.WriteLine("{0}: {1}", word.Key, word.Value);
+        }
+      }
+
+    }
+
     static void Main(string[] args)
     {
       //read_treebank3();
@@ -220,7 +251,9 @@ namespace DebugTest
       //test_regex_filter_for_noun_phrases_from_wsj();
       //most_common_collocated_NPs_in_Treebank3();
 
-      test_floresta_reader();
+      //test_floresta_reader();
+      //test_mac_morpho_reader();
+      portuguese_word_frequency();
     }
   }
 }
