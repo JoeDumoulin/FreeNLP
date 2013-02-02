@@ -45,7 +45,30 @@ namespace FreeNLP.Learning
       }
     }
 
+    public static IEnumerable<KeyValuePair<string, LikelihoodRatio.LikelihoodRatioData<string, string>>> 
+        collocations_from_likelihood_ratio_Treebank3()
+    {
+      var treebank3 = new Treebank3CorpusReader(Path.Combine(
+              Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
 
+      var bigram_freqs = treebank3.words()
+                .Where((x) => x != ", " && !TextTools.is_puctuation(x) && TextTools.not_whitespace.IsMatch(x))
+                .NGram(2).Select((a) => a.Aggregate((x, y) => x + " " + y))
+                .Freqs();
+
+      var unigram_freqs = treebank3.words()
+          .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Freqs();
+      var N = bigram_freqs.Count();
+
+      foreach (var bigram_llr in bigram_freqs.Generate())
+      {
+        var llr = new LikelihoodRatio.LikelihoodRatioData<string, string>(N
+                  , bigram_llr.Key, bigram_llr.Value, bigram_llr.Key.Split().ToArray(), unigram_freqs);
+        {
+          yield return new KeyValuePair<string, LikelihoodRatio.LikelihoodRatioData<string, string>>(bigram_llr.Key, llr);
+        }
+      }
+    }
   }
 }
 

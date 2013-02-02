@@ -7,6 +7,7 @@ using System.IO;
 using TestFilesAndFolders;
 using Utilities;
 using CorpusReader;
+using FreeNLP.Learning;
 
 namespace DebugTest
 {
@@ -229,7 +230,33 @@ namespace DebugTest
           outfile.WriteLine("{0}: {1}", word.Key, word.Value);
         }
       }
+    }
 
+    private static void test_log_likelihood_collocation()
+    {
+      var treebank3 = new Treebank3CorpusReader(Path.Combine(
+              Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3"));
+
+      var bigram_freqs = treebank3.words()
+                .Where((x) => x != ", " && !TextTools.is_puctuation(x) && TextTools.not_whitespace.IsMatch(x))
+                .NGram(2).Select((a) => a.Aggregate((x, y) => x + " " + y))
+                .Freqs();
+
+      var unigram_freqs = treebank3.words()
+          .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Freqs();
+
+      foreach (var bigram_llr in LikelihoodRatio.log_likelihood_ratio(unigram_freqs, bigram_freqs).OrderBy((t)=>t.Value).Take(2000))
+      {
+        Console.WriteLine(String.Format(@"{0}: {1}", bigram_llr.Key, bigram_llr.Value));
+      }
+    }
+
+    private static void test_log_likelihood_collocation2()
+    {
+      foreach (var bigram in CollocationLearning.collocations_from_likelihood_ratio_Treebank3().OrderBy((x)=>x.Value.log_lambda))
+      {
+        Console.WriteLine("{0}: {1}", bigram.Key, bigram.Value.log_lambda);
+      }
     }
 
     static void Main(string[] args)
@@ -253,7 +280,9 @@ namespace DebugTest
 
       //test_floresta_reader();
       //test_mac_morpho_reader();
-      portuguese_word_frequency();
+      //portuguese_word_frequency();
+
+      test_log_likelihood_collocation2();
     }
   }
-}
+} 

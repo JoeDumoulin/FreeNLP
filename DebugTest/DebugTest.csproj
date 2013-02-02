@@ -55,6 +55,10 @@
       <Project>{49B63B8D-BA0C-43B7-8097-2A3E6598EFA0}</Project>
       <Name>CorpusReader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FreeNLP.Learning\FreeNLP.Learning.csproj">
+      <Project>{5D1E067B-1167-4528-B777-6170E3DAC193}</Project>
+      <Name>FreeNLP.Learning</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestFilesAndFolders\TestFilesAndFolders.csproj">
       <Project>{05E4824A-BBD9-4D83-B132-BBB9B12BD01E}</Project>
       <Name>TestFilesAndFolders</Name>

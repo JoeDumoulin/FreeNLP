@@ -14,7 +14,7 @@ namespace Utilities
     public static Regex bracketed_phrase = new Regex(@"\[([^\]]+)\]");
     public static Regex tagged_term = new Regex(@"([^/ ]+)/(\S+)");
     public static Regex metadata_term = new Regex(@"@([^\]]+)");
-    public static Regex punctuation = new Regex(@"[\[\]\(\)\.,:;\?!]");
+    public static Regex punctuation = new Regex(@"[\[\]\(\)\.,:;\?!-]");
 
     private static string windows_newline = "\r\n";
     private static string unix_newline = "\n"; 
