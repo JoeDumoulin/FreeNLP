@@ -262,7 +262,6 @@ namespace DebugTest
     private static void test_range()
     {
       var text = TextExamples.emma();
-      var freq = new Frequencies<string>();
       foreach (var token in Regex.Split(text, @"(\W+)")
               .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Take(10))
       {
@@ -273,7 +272,21 @@ namespace DebugTest
       {
         Console.WriteLine(token);
       }
+    }
 
+    private static void test_slice()
+    {
+      var text = TextExamples.emma();
+      foreach (var token in Regex.Split(text, @"(\W+)")
+              .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Take(10))
+      {
+        Console.WriteLine(token);
+      }
+      foreach (var token in Regex.Split(text, @"(\W+)")
+              .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Slice(2).Take(10))
+      {
+        Console.WriteLine(token);
+      }
     }
 
     static void Main(string[] args)
@@ -300,7 +313,8 @@ namespace DebugTest
       //portuguese_word_frequency();
 
       //test_log_likelihood_collocation2();
-      test_range();
+      //test_range();
+      test_slice();
     }
   }
 } 

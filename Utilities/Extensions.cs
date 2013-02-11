@@ -101,9 +101,9 @@ namespace Utilities
     {
       if (source == null) throw new ArgumentNullException("source");
       if (start < 0) throw new ArgumentOutOfRangeException("start", 
-          @"the ValueType of 'start' must be positive");
+          @"'start' must be positive");
       if (distance < 0) throw new ArgumentOutOfRangeException("distance", 
-          @"the ValueType of 'distance' must be positive");
+          @"'distance' must be positive");
 
       int there = 0;
       using (IEnumerator<T> iterator = source.GetEnumerator())
@@ -122,6 +122,20 @@ namespace Utilities
           yield return iterator.Current;
           there += 1;
         }
+      }
+    }
+
+    public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int size)
+    {
+      if (source == null) throw new ArgumentNullException("source");
+      if (size < 0) throw new ArgumentOutOfRangeException("size",
+          @"'size' must be positive");
+      int there = 0;
+      foreach (var item in source)
+      {
+        if (there % size == 0)
+          yield return item;
+        there += 1;
       }
     }
   }
