@@ -259,6 +259,23 @@ namespace DebugTest
       }
     }
 
+    private static void test_range()
+    {
+      var text = TextExamples.emma();
+      var freq = new Frequencies<string>();
+      foreach (var token in Regex.Split(text, @"(\W+)")
+              .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Take(10))
+      {
+        Console.WriteLine(token);
+      }
+      foreach (var token in Regex.Split(text, @"(\W+)")
+              .Where((x) => x != ", " && TextTools.not_whitespace.IsMatch(x)).Range(2,8))
+      {
+        Console.WriteLine(token);
+      }
+
+    }
+
     static void Main(string[] args)
     {
       //read_treebank3();
@@ -282,7 +299,8 @@ namespace DebugTest
       //test_mac_morpho_reader();
       //portuguese_word_frequency();
 
-      test_log_likelihood_collocation2();
+      //test_log_likelihood_collocation2();
+      test_range();
     }
   }
 } 

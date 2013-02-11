@@ -43,6 +43,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FilesAndFolders.cs" />
     <Compile Include="Frequencies.cs" />
+    <Compile Include="Iterator.cs" />
     <Compile Include="LikelihoodRatio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexTools.cs" />
