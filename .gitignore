@@ -161,3 +161,8 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+DebugTest/DebugTest.csproj.profsetdata.xml
+*.dll
+packages/NUnit.2.6.4/lib/nunit.framework.xml
+*.nupkg
+packages/NUnit.2.6.4/license.txt
