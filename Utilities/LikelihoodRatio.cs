@@ -26,7 +26,40 @@ namespace Utilities
     /// <returns></returns>
     public static double logL(double k, double n, double p)
     {
-      return k*Math.Log(p) + (n-k)*Math.Log(1-p);
+      return k * Math.Log(p) + (n - k) * Math.Log(1 - p);
+    }
+
+    public static double L(double k, double n, double p)
+    {
+      return Math.Pow(p, k) * Math.Pow(1 - p, n - k);
+    }
+
+    /// <summary>
+    /// Calculate the log likelihood ratio for an alternative hypothesis given MLE data.
+    /// </summary>
+    /// <param name="N">number of tokens in the corpus</param>
+    /// <param name="c01">number of bigrams or matched tokens to test</param>
+    /// <param name="c0">number of times the first element of this bigram appears in the corpus</param>
+    /// <param name="c1">number of times the second element of this bigram appears in the corpus</param>
+    /// <param name="p">probability of the null hypothesis</param>
+    /// <param name="p1">probability of being true in the alternative hypothesis</param>
+    /// <param name="p2">probability of being false in the alternative hypothesis</param>
+    /// <returns></returns>
+    public static double logLikelihoodRatio(double N, double c01, double c0
+                                , double c1, double p, double p1, double p2)
+    {
+      //return -2*(Math.Log(L(c01, c0, p)) + Math.Log(L(c1 - c01, N - c0, p))
+      //          - Math.Log(L(c01, c0, p1)) - Math.Log(L(c1 - c01, N - c0, p2)));
+
+      return -2 * (logL(c01, c0, p) + logL(c1 - c01, N - c0, p)
+                - logL(c01, c0, p1) - logL(c1 - c01, N - c0, p2));
+    }
+
+    public static double logLambda(double N, double c01, double c0
+                                , double c1, double p, double p1, double p2)
+    {
+      return (logL(c01, c0, p) + logL(c1 - c01, N - c0, p)
+                - logL(c01, c0, p1) - logL(c1 - c01, N - c0, p2));
     }
 
     /// <summary>
@@ -86,7 +119,7 @@ namespace Utilities
         p_2 = (c[1] - c_01) / (N - c[0]);
         log_lambda = -2*lambda(c_01, N);
       }
-      public S feature { get; set;}
+      public S feature { get; private set;}
       public T[] t { get; set; }
       public double[] c { get; set; }
       public double c_01 { get; set; }

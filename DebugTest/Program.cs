@@ -289,6 +289,69 @@ namespace DebugTest
       }
     }
 
+    private static void read_treebank3_period_bigrams()
+    {
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
+      var treebank = new Treebank3CorpusReader(path);
+      var t1 = treebank.words().Where(x=> (x != "") && x.ToCharArray().Last() == '.');
+      var t2 = treebank.words().NGram(2).Where(a=>a.Last()==".").Select(a=>a.Aggregate((x,y)=>String.Concat(x,y)));
+      var t_no_periods = treebank.words().Where(x=> (x != "") && x.ToCharArray().Last() != '.')
+          .Where((x)=>!TextTools.is_puctuation(x)).NGram(2).Where(a=>a.Last()!=".")
+          .Select(a=>a.Aggregate((x,y)=>String.Concat(x,y)));
+      foreach (var content in t1.Union(t2))
+      {
+        //var x = content;
+        Console.WriteLine(content);
+      }
+      Console.WriteLine(@"ending period: {0}", t1.Concat(t2).Count());
+      Console.WriteLine(@" no ending period: {0}", t_no_periods.Count());
+      Console.WriteLine(@" total: {0}", t_no_periods.Concat(t1.Concat(t2)).Count());
+    }
+
+    private static void get_punkt_statistics_from_treebank3()
+    {
+      //var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Treebank-3");
+      //var treebank = new Treebank3CorpusReader(path);
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Austen");
+      var treebank = new TextCorpusReader(path);
+      var stats = Punkt.process(treebank.words().Where(a=> a.Length <=7 || a.Substring(0,7)!="Speaker"));
+
+      using (var writer = new StreamWriter("statistics.log"))
+      {
+        foreach (var stat in stats.type_classifier_results
+                .OrderBy(a => a.statistics.scaled_llr)
+                )
+        {// TODO: output statistics to a log for review.
+          writer.WriteLine(@"{0}, {1}, {2}, {3} {4} {5} {6} {7}", stat.statistics.scaled_llr
+              , stat.statistics.c_w0, stat.statistics.c_w1, stat.statistics.c_w01, stat.statistics.length_penalty
+              , stat.statistics.with_final_period_penalty, stat.statistics.w0, stat.classification);
+//          Console.WriteLine(@"{0}, c(w,.)={1},  c(w,~.)={2} -> {3}", stat.statistics.scaled_llr, stat.statistics.c_w01, stat.statistics.c_w0 - stat.statistics.c_w01, stat.statistics.w01);
+        }
+      }
+    }
+
+    private static void get_instances_of_Mr_from_austen()
+    {
+      var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Data\Austen");
+      var austen = new TextCorpusReader(path);
+      var freq = new Frequencies<string>();
+      var i = 0;
+      foreach (var w in austen.words().NGram(2))
+      {
+        var term = w.First().Trim().Append(w.Last()).Trim();
+        //if (term.Length > 1 && term.Substring(0, 2) == "Mr" && term.Substring(2, 1) != "." && term.Substring(2, 1) != "s")
+        if (term.Length > 1 && term.Substring(0, 2) == "Mr")
+        {
+          freq.Add(term);
+        }
+      }
+      foreach (var t in freq.Generate())
+      {
+        Console.WriteLine("{0} => {1}", t.Key, t.Value);
+      }
+    }
+
+
     static void Main(string[] args)
     {
       //read_treebank3();
@@ -314,7 +377,10 @@ namespace DebugTest
 
       //test_log_likelihood_collocation2();
       //test_range();
-      test_slice();
+      //test_slice();
+      //read_treebank3_period_bigrams();
+      get_punkt_statistics_from_treebank3();
+      //get_instances_of_Mr_from_austen();
     }
   }
 } 

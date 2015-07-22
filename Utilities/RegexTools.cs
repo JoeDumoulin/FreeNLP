@@ -15,13 +15,13 @@ namespace Utilities
   /// </remarks>
   public static class RegexTools
   {
-  /// <summary>
+    /// <summary>
     /// regex_filter_pattern supports the transformation of a pseudo regex pattern used to define a search 
     /// for parts of speech into a complete compiled regex suitable for the actual search.
-  /// </summary>
-  /// <param name="pattern">The pseudopattern that defines the search.
-  /// </param>
-  /// <returns>the full pattern string</returns>
+    /// </summary>
+    /// <param name="pattern">The pseudopattern that defines the search.
+    /// </param>
+    /// <returns>the full pattern string</returns>
     public static string regex_filter_pattern(string pattern)
     {
       var subpattern_list = new List<string>();

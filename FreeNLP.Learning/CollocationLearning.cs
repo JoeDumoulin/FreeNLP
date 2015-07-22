@@ -68,6 +68,7 @@ namespace FreeNLP.Learning
           yield return new KeyValuePair<string, LikelihoodRatio.LikelihoodRatioData<string, string>>(bigram_llr.Key, llr);
         }
       }
+      // TODO: chi-sqare comparison to gen collocations
     }
   }
 }

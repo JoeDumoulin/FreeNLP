@@ -125,18 +125,27 @@ namespace Utilities
       }
     }
 
-    public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int size)
+    public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int distance)
     {
       if (source == null) throw new ArgumentNullException("source");
-      if (size < 0) throw new ArgumentOutOfRangeException("size",
-          @"'size' must be positive");
+      if (distance < 0) throw new ArgumentOutOfRangeException("distance",
+          @"'distance' must be positive");
       int there = 0;
       foreach (var item in source)
       {
-        if (there % size == 0)
+        if (there % distance == 0)
           yield return item;
         there += 1;
       }
+    }
+  }
+  public static class StringExtensions
+  {
+    public static string Append(this string source, string right)
+    {
+      if (source == null) throw new ArgumentNullException("source");
+      if (right == null) throw new ArgumentNullException("right");
+      return String.Concat(source, right);
     }
   }
 }

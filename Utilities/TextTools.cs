@@ -70,6 +70,12 @@ namespace Utilities
       return false;
     }
 
+    public static bool is_numeric(string test)
+    {
+      double n;
+      return double.TryParse(test, out n);
+    }
+
     public static string trim_punctuation(string word)
     {
       return punctuation.Split(word).First();

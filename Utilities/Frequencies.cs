@@ -32,6 +32,16 @@ namespace Utilities
       }
     }
 
+    public void AddCount(T term, double count)
+    {
+      if (_counts.ContainsKey(term))
+        _counts[term] += count;
+      else
+      {
+        _counts.Add(term, count);
+      }
+    }
+
     public IEnumerable<T> Terms()
     {
       foreach (var term in _counts.Keys)
@@ -103,6 +113,8 @@ namespace Utilities
       }
     }
 
+    // The following code is used to create a string key.  
+    // TODO: This can be replaced by implementing hashing on the key list.
     private KeyValuePair<string, string> condition_and_event_from_list(IEnumerable<string> termlist)
     {
       if (termlist.Count() < 2) throw new ArgumentException("termlist has < 2 terms.");
